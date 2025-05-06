@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "CrutchAi",
+    "version": "1.0.0",
+    "description": "A foreign language learning tool",
+    "icons": {
+      "48": "images/crutch.jpg",
+      "128": "images/crutch.jpg"
+    },
+    "action":{
+      "default_popup":"src/popup.html"
+    }
+}

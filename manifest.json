@@ -1,13 +1,25 @@
 {
-    "manifest_version": 3,
-    "name": "CrutchAi",
-    "version": "1.0.0",
-    "description": "A foreign language learning tool",
-    "icons": {
-      "48": "images/crutch.jpg",
-      "128": "images/crutch.jpg"
-    },
-    "action":{
-      "default_popup":"src/popup.html"
+  "manifest_version": 3,
+  "name": "CrutchAi",
+  "version": "1.0.0",
+  "description": "A foreign language learning tool",
+  "icons": {
+    "48": "images/crutch.jpg",
+    "128": "images/crutch.jpg"
+  },
+  "permissions": ["scripting"],
+  "host_permissions": ["https://www.netflix.com/watch/*"],
+  "action": {
+    "default_popup": "src/popup/dist/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.netflix.com/watch/*"],
+      "js": ["src/subtitle.js","src/content.js"]
     }
+  ],
+    "background": {
+    "service_worker": "src/service.js",
+    "type": "module"
+  }
 }

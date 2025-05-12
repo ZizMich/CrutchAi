@@ -7,7 +7,7 @@
     "48": "images/crutch.jpg",
     "128": "images/crutch.jpg"
   },
-  "permissions": ["scripting"],
+  "permissions": ["tabs", "scripting"],
   "host_permissions": ["https://www.netflix.com/watch/*"],
   "action": {
     "default_popup": "src/popup/dist/index.html"
@@ -15,10 +15,10 @@
   "content_scripts": [
     {
       "matches": ["https://www.netflix.com/watch/*"],
-      "js": ["src/subtitle.js","src/content.js"]
+      "js": ["src/subtitle.js", "src/content.js"]
     }
   ],
-    "background": {
+  "background": {
     "service_worker": "src/service.js",
     "type": "module"
   }

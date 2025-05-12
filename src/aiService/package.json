@@ -1,0 +1,19 @@
+{
+  "name": "aiservice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": "",
+  "dependencies": {
+    "groq-sdk": "^0.21.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}

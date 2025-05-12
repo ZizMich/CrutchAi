@@ -2,7 +2,7 @@ console.log("pivo2")
 function showSubtitlePopup(text, x, y) {
   const old = document.querySelector("#subtitle-popup");
   if (old) old.remove();
-
+  wordButtons = []
   const popup = document.createElement("div");
   popup.id = "subtitle-popup";
 
@@ -23,7 +23,27 @@ function showSubtitlePopup(text, x, y) {
     color: "#fff",
     cursor: "pointer"
   });
+askButton.onclick = () => {
+  const selectedWords = wordButtons
+    .filter(btn => btn.dataset.clicked === "true")
+    .map(btn => btn.textContent);
 
+  const promptText = "Kontext:" + text + " \n Was bedeuten diese Wörter in diesem Kontext?:" + selectedWords.join(" ");
+  console.log(promptText)
+  
+  chrome.runtime.sendMessage(
+    { action: "ask", prompt: promptText },
+    (response) => {
+      if (response?.result) {
+        showResponsePopup(response.result,x,y);
+        popup.remove();
+      } else {
+        showResponsePopup("Keine Antwort erhalten.",x,y);
+        popup.remove();
+      }
+    }
+  );
+};
   const closeButton = document.createElement("button");
   closeButton.textContent = "×";
   Object.assign(closeButton.style, {
@@ -73,6 +93,7 @@ function showSubtitlePopup(text, x, y) {
     });
 
     wordContainer.appendChild(button);
+    wordButtons.push(button)
   });
 
   popup.appendChild(wordContainer);
@@ -97,3 +118,49 @@ function showSubtitlePopup(text, x, y) {
 
 // Globale Funktion verfügbar machen
 window.showSubtitlePopup = showSubtitlePopup;
+
+function showResponsePopup(responseText, x, y) {
+  const existing = document.querySelector("#response-popup");
+  if (existing) existing.remove();
+
+  const popup = document.createElement("div");
+  popup.id = "response-popup";
+
+  Object.assign(popup.style, {
+    position: "fixed",
+    top: `${y}px`,
+    left: `${x}px`,
+    maxWidth: "800px",
+    maxWidth: "500px",
+    padding: "16px",
+    background: "#111",
+    color: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.5)",
+    zIndex: "999999",
+    fontFamily: "sans-serif",
+    whiteSpace: "pre-wrap",
+    fontSize:"20px"
+  });
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "×";
+  Object.assign(closeBtn.style, {
+    position: "absolute",
+    top: "4px",
+    right: "8px",
+    background: "transparent",
+    color: "#fff",
+    border: "none",
+    fontSize: "22px",
+    cursor: "pointer"
+  });
+  closeBtn.onclick = () => popup.remove();
+
+  const content = document.createElement("div");
+  content.textContent = responseText;
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(content);
+  document.body.appendChild(popup);
+}

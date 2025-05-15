@@ -1,27 +1,32 @@
 import React, { Component } from "react";
 
 interface SelectorProps {
-    options:String[],
-    default:number,
-    onSelect: ()=>void
+  options: string[];
+  default: number;
+  onSelect: (value: string) => void;
 }
 
-class Selector extends Component<SelectorProps> {
+export default class Selector extends Component<SelectorProps> {
   render() {
-    const {onSelect} = this.props;
+    const { options, default: defaultIndex, onSelect } = this.props;
     return (
-        <fieldset className="fieldset" style={{width:"100%"}}>
-        <legend className="fieldset-legend">Browsers</legend>
-        <select onSelect={onSelect} defaultValue="Pick a browser" className="select">
-            <option disabled={true}>Pick a browser</option>
-            <option>Chrome</option>
-            <option>FireFox</option>
-            <option>Safari</option>
+      <fieldset className="fieldset" style={{ width: "90%" }}>
+        <legend className="fieldset-legend">Language</legend>
+        <select
+          style={{ color: "black" }}
+          onChange={(e) => onSelect(e.target.value)}
+   
+          defaultValue={options[defaultIndex]}
+          className="select"
+        >
+          {options.map((opt, idx) => (
+            <option style={{ color: "black" }} key={idx} value={opt}>
+              {opt}
+            </option>
+          ))}
         </select>
         <span className="label">Optional</span>
-        </fieldset>
+      </fieldset>
     );
   }
 }
-
-export default Selector;

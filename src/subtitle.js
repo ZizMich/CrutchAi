@@ -1,4 +1,20 @@
-console.log("pivo2")
+function ProduceAswer(context, wordButtons, x,y ){
+    const selectedWords = wordButtons
+    .filter(btn => btn.dataset.clicked === "true")
+    .map(btn => btn.textContent);
+  
+  chrome.runtime.sendMessage(
+    { action: "ask", words: selectedWords.join(" "), context:context },
+    (response) => {
+      if (response?.result) {
+        showResponsePopup(response.result,x,y);
+      } else {
+        showResponsePopup("Keine Antwort erhalten.",x,y);
+        
+      }
+    }
+  );
+}
 function showSubtitlePopup(text, x, y) {
   const old = document.querySelector("#subtitle-popup");
   if (old) old.remove();
@@ -24,25 +40,8 @@ function showSubtitlePopup(text, x, y) {
     cursor: "pointer"
   });
 askButton.onclick = () => {
-  const selectedWords = wordButtons
-    .filter(btn => btn.dataset.clicked === "true")
-    .map(btn => btn.textContent);
-
-  const promptText = "Kontext:" + text + " \n Was bedeuten diese Wörter in diesem Kontext?:" + selectedWords.join(" ");
-  console.log(promptText)
-  
-  chrome.runtime.sendMessage(
-    { action: "ask", prompt: promptText },
-    (response) => {
-      if (response?.result) {
-        showResponsePopup(response.result,x,y);
-        popup.remove();
-      } else {
-        showResponsePopup("Keine Antwort erhalten.",x,y);
-        popup.remove();
-      }
-    }
-  );
+    ProduceAswer(window.subtitleQueue.stringify(), wordButtons ,x ,y)
+    popup.remove();
 };
   const closeButton = document.createElement("button");
   closeButton.textContent = "×";
@@ -164,3 +163,51 @@ function showResponsePopup(responseText, x, y) {
   popup.appendChild(content);
   document.body.appendChild(popup);
 }
+
+class SubtitleQueue {
+  constructor(maxLength) {
+    this.maxLength = maxLength;
+    this.items = [];
+  }
+
+  // Methode zum Hinzufügen von Titeln zur Warteschlange
+  add(subtitle) {
+    if(subtitle.length>2){
+
+    // Bereinigung von 'subtitle' (whitespace entfernen, normalisieren)
+    const cleanSubtitle = this.cleanString(subtitle);
+
+    // Überprüfe, ob der bereinigte Titel bereits in der Warteschlange ist
+    if (!this.items.some(item => this.cleanString(item) === cleanSubtitle)) {
+      this.items.push(subtitle);
+      // Wenn die Warteschlange zu lang wird, entferne das älteste Element
+      if (this.items.length > this.maxLength) {
+        this.items.shift();
+      }
+    }
+  }
+}
+
+  // Bereinigung der Zeichenkette (entferne führende/abschließende Leerzeichen und doppelte Leerzeichen)
+  cleanString(str) {
+    return str.trim().replace(/\s+/g, ' ');
+  }
+
+  // Methode zum Abrufen aller Elemente als Kopie (um Seiteneffekte zu vermeiden)
+  getAll() {
+    return [...this.items];
+  }
+
+  // Methode, um den ersten (ältesten) Titel in der Warteschlange zu überprüfen
+  peek() {
+    return this.items.length > 0 ? this.items[0] : undefined;
+  }
+
+  // Hilfsmethode zum Stringifizieren der Warteschlange
+  stringify() {
+    return this.items.join("\n");
+  }
+}
+
+
+window.subtitleQueue = new SubtitleQueue(10);

@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter, Routes, Route } from "react-router-dom"; // ✅ change here
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 interface RouteConfig {
   path: string;

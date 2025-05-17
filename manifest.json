@@ -7,9 +7,12 @@
     "48": "images/crutch.jpg",
     "128": "images/crutch.jpg"
   },
-  "permissions": ["tabs", "scripting", "storage"],
+  "permissions": ["tabs", "scripting", "storage", "identity"],
   "host_permissions": ["https://www.netflix.com/watch/*"],
-
+  "oauth2": {
+    "client_id": "",
+    "scopes": ["openid", "profile", "email"]
+  },
   "action": {
     "default_popup": "src/popup/dist/index.html"
   },

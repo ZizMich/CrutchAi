@@ -1,22 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 interface TextInputProps {
   title: string;
   default?: string;
   onDoneTyping?: (value: string) => void;
-  delay?: number; // optional, z. B. 500 ms
+  delay?: number; // optional delay in ms
 }
 
 const TextInput: React.FC<TextInputProps> = ({
   title,
   default: defaultValue,
   onDoneTyping,
-  delay = 500
+  delay = 500,
 }) => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const [value, setValue] = useState(defaultValue || "");
   const timeoutRef = useRef<number | null>(null);
 
-  // Synchronisiere defaultValue → value wenn defaultValue sich ändert
+  // Sync defaultValue -> value when defaultValue changes
   useEffect(() => {
     setValue(defaultValue || "");
   }, [defaultValue]);
@@ -39,13 +42,26 @@ const TextInput: React.FC<TextInputProps> = ({
   }, []);
 
   return (
-    <fieldset className="fieldset">
-      <legend className="fieldset-legend">{title}</legend>
+    <fieldset
+      className={`border rounded-md p-4 my-4 ${
+        isDark ? "border-gray-600" : "border-gray-300"
+      }`}
+    >
+      <legend
+        className={`px-2 font-medium ${
+          isDark ? "text-gray-300" : "text-gray-700"
+        }`}
+      >
+        {title}
+      </legend>
       <input
         type="text"
-        className="input"
+        className={`w-full p-2 rounded-md border ${
+          isDark
+            ? "bg-gray-700 text-white border-gray-600 placeholder-gray-400"
+            : "bg-white text-gray-900 border-gray-300 placeholder-gray-500"
+        } focus:outline-none focus:ring-2 focus:ring-blue-500`}
         placeholder="e.g. explain these words"
-        style={{ color: "black" }}
         value={value}
         onChange={handleChange}
       />

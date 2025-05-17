@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type Preferences = Record<string, any>;
+type Preferences = Record<string, unknown>;
 
 export function usePreferences<T extends Preferences>(
   defaults: T

@@ -1,2 +1,4 @@
-execute npx vite build inside this folder
+execute inside this folder
+npx vite build
+
 same for aiservice

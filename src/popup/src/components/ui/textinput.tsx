@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 
-interface TextInputProps {
+export interface TextInputProps {
   title: string;
   default?: string;
   onDoneTyping?: (value: string) => void;
   delay?: number; // optional delay in ms
+  disabled?: boolean; // whether the input is disabled
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -13,6 +14,7 @@ const TextInput: React.FC<TextInputProps> = ({
   default: defaultValue,
   onDoneTyping,
   delay = 500,
+  disabled = false,
 }) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -45,7 +47,7 @@ const TextInput: React.FC<TextInputProps> = ({
     <fieldset
       className={`border rounded-md p-4 my-4 ${
         isDark ? "border-gray-600" : "border-gray-300"
-      }`}
+      } ${disabled ? "opacity-60" : ""}`}
     >
       <legend
         className={`px-2 font-medium ${
@@ -60,10 +62,13 @@ const TextInput: React.FC<TextInputProps> = ({
           isDark
             ? "bg-gray-700 text-white border-gray-600 placeholder-gray-400"
             : "bg-white text-gray-900 border-gray-300 placeholder-gray-500"
-        } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        } focus:outline-none focus:ring-2 focus:ring-blue-500
+        disabled:opacity-50 disabled:cursor-not-allowed`}
         placeholder="e.g. explain these words"
         value={value}
         onChange={handleChange}
+        disabled={disabled}
+        aria-disabled={disabled}
       />
     </fieldset>
   );

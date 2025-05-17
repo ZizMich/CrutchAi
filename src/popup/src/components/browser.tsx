@@ -1,21 +1,46 @@
-import React from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import React, { memo } from "react";
+import { HashRouter, Routes, Route, RouteProps } from "react-router-dom";
 
-interface RouteConfig {
+/**
+ * Configuration for a route in the application
+ */
+export interface RouteConfig extends Pick<RouteProps, "path"> {
+  /** Path for the route */
   path: string;
+  /** React element to render for this route */
   element: React.ReactElement;
 }
 
-const Browser: React.FC<{ routeConfigs: RouteConfig[] }> = ({ routeConfigs }) => {
+/**
+ * Props for the Browser component
+ */
+interface BrowserProps {
+  /** Array of route configurations */
+  routeConfigs: RouteConfig[];
+}
+
+/**
+ * Browser component that sets up the application routing
+ *
+ * Uses HashRouter for better compatibility with Chrome extensions
+ *
+ * @param props - Component properties
+ * @returns The Router component with configured routes
+ */
+const Browser: React.FC<BrowserProps> = ({ routeConfigs }) => {
   return (
-    <HashRouter> 
+    <HashRouter>
       <Routes>
         {routeConfigs.map((config, index) => (
-          <Route key={index} path={config.path} element={config.element} />
+          <Route
+            key={config.path || index}
+            path={config.path}
+            element={config.element}
+          />
         ))}
       </Routes>
     </HashRouter>
   );
 };
 
-export default Browser;
+export default memo(Browser);

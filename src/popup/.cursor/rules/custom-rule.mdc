@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+Carefully examine codebase.
+
+Write only qualified, production-ready code — clean, efficient, maintainable.
+Follow industry standards — use best practices for security, performance, and readability.
+Always include documentation — function/class/module docstrings, inline comments, and usage examples.
+Validate and test all code — include unit tests or integration tests where applicable.
+Avoid shortcuts and hacks — prioritize correctness, scalability, and clarity.
+Explain design decisions — briefly justify choices that impact architecture or performance.
+

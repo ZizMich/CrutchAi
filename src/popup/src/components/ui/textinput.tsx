@@ -1,14 +1,36 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 
+/**
+ * TextInput component props interface
+ */
 export interface TextInputProps {
+  /** Label text displayed above the input field */
   title: string;
+  /** Default value for the input field */
   default?: string;
+  /** Callback function triggered after user stops typing */
   onDoneTyping?: (value: string) => void;
-  delay?: number; // optional delay in ms
-  disabled?: boolean; // whether the input is disabled
+  /** Debounce delay in milliseconds before triggering onDoneTyping */
+  delay?: number;
+  /** Whether the input field is disabled */
+  disabled?: boolean;
 }
 
+/**
+ * TextInput Component
+ *
+ * A styled text input field with debounced onChange handling.
+ * Includes a fieldset with title legend and respects theme context.
+ *
+ * @example
+ * <TextInput
+ *   title="Search"
+ *   default="Initial value"
+ *   onDoneTyping={(value) => console.log(value)}
+ *   delay={300}
+ * />
+ */
 const TextInput: React.FC<TextInputProps> = ({
   title,
   default: defaultValue,
@@ -26,6 +48,9 @@ const TextInput: React.FC<TextInputProps> = ({
     setValue(defaultValue || "");
   }, [defaultValue]);
 
+  /**
+   * Handles input change with debounce functionality
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setValue(newValue);
@@ -37,6 +62,7 @@ const TextInput: React.FC<TextInputProps> = ({
     }, delay);
   };
 
+  // Clean up timeout on component unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);

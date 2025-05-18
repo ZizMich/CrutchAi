@@ -1,13 +1,32 @@
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
+/**
+ * Toggle component props interface
+ */
 interface ToggleProps {
+  /** Whether the toggle is checked/active */
   checked?: boolean;
+  /** Callback function triggered when toggle state changes */
   onToggle?: (checked: boolean) => void;
+  /** Additional CSS classes to apply to the toggle */
   className?: string;
+  /** Optional inline styles to apply to the toggle */
   style?: React.CSSProperties;
 }
 
+/**
+ * Toggle Component
+ *
+ * A styled toggle switch that supports both light and dark themes.
+ * Provides visual feedback for checked/unchecked states.
+ *
+ * @example
+ * <Toggle
+ *   checked={isEnabled}
+ *   onToggle={(checked) => setIsEnabled(checked)}
+ * />
+ */
 const Toggle: React.FC<ToggleProps> = ({
   checked = false,
   onToggle,
@@ -17,6 +36,9 @@ const Toggle: React.FC<ToggleProps> = ({
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
+  /**
+   * Handles the toggle state change
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onToggle?.(e.target.checked);
   };
@@ -28,6 +50,7 @@ const Toggle: React.FC<ToggleProps> = ({
         checked={checked}
         onChange={handleChange}
         className="sr-only peer"
+        aria-checked={checked}
       />
       <div
         className={`

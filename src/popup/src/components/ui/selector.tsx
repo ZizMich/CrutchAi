@@ -1,12 +1,31 @@
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
+/**
+ * Selector component props interface
+ */
 interface SelectorProps {
+  /** Array of options to display in the dropdown */
   options: string[];
+  /** Index of the default selected option */
   default: number;
+  /** Callback function triggered when an option is selected */
   onSelect: (value: string) => void;
 }
 
+/**
+ * Selector Component
+ *
+ * A styled dropdown select component with theme support.
+ * Displays a list of options in a dropdown menu with a fieldset wrapper.
+ *
+ * @example
+ * <Selector
+ *   options={["English", "Spanish", "French"]}
+ *   default={0}
+ *   onSelect={(language) => setLanguage(language)}
+ * />
+ */
 const Selector: React.FC<SelectorProps> = ({
   options,
   default: defaultIndex,
@@ -36,6 +55,7 @@ const Selector: React.FC<SelectorProps> = ({
             ? "bg-gray-700 text-white border-gray-600"
             : "bg-white text-gray-900 border-gray-300"
         } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        aria-label="Language selector"
       >
         {options.map((opt, idx) => (
           <option

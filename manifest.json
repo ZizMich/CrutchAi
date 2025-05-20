@@ -1,29 +1,77 @@
 {
   "manifest_version": 3,
-  "name": "CrutchAi",
-  "version": "1.0.0",
-  "description": "A foreign language learning tool",
-  "icons": {
-    "48": "images/crutch.jpg",
-    "128": "images/crutch.jpg"
-  },
-  "permissions": ["tabs", "scripting", "storage", "identity"],
-  "host_permissions": ["https://www.netflix.com/watch/*"],
-  "oauth2": {
-    "client_id": "380572766462-ip8ntnfoms88vsm243sj0b1q9dthoqbe.apps.googleusercontent.com",
-    "scopes": ["openid", "profile", "email"]
-  },
-  "action": {
-    "default_popup": "src/popup/dist/index.html"
+  "name": "ContextTranslate",
+  "version": "1.0",
+  "description": "Translate and analyze words in context using Gemini AI.",
+  "permissions": [
+    "storage",
+    "scripting",
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/index.js",
+    "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.netflix.com/watch/*"],
-      "js": ["src/subtitle.js", "src/content.js"]
+      "matches": ["<all_urls>"],
+      "css": ["src/styles/style.css"],
+      "js": [
+        "src/content/SelectionManager.js",
+        "src/content/QuizManager.js", 
+        "src/content/utils.js", 
+        "src/content/SpeechManager.js",  
+        "src/content/UIManager.js", 
+        "src/content/ContentController.js", 
+        "src/content/index.js"
+      ]
+    },
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": [
+        "src/youtube/AsyncVoice.js",
+        "src/youtube/AIService.js",
+        "src/youtube/ChatUI.js",
+        "src/youtube/TranscriptManager.js",
+        "src/youtube/VideoQuiz.js",
+        "src/youtube/YouTubeHelper.js",
+        "src/youtube/index.js"
+      ]
     }
   ],
-  "background": {
-    "service_worker": "src/service.js",
-    "type": "module"
-  }
+  "action": {
+    "default_popup": "html/popup.html",
+    "default_icon": {
+      "16": "assets/logoBig.png",
+      "32": "assets/logoBig.png",
+      "48": "assets/logoBig.png",
+      "128": "assets/logoBig.png"
+    }
+  },
+  "icons": {
+    "16": "assets/logoBig.png",
+    "32": "assets/logoBig.png",
+    "48": "assets/logoBig.png",
+    "128": "assets/logoBig.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "vendor/*.map",
+        "*.css",
+        "*.html",
+        "*.png",
+        "src/content/*.js"
+      ],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["assets/logo.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

@@ -1,0 +1,47 @@
+.ct-voice-translate-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(33, 150, 243, 0.2);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500;
+    box-shadow: none;
+    cursor: pointer;
+    outline: none;
+    margin: 0; /* Remove margin */
+    letter-spacing: 0.1px;
+    position: relative;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; /* Add flex properties to match language selector */
+    height: 28px;
+    min-width: 0;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.ct-voice-translate-btn:hover, .ct-voice-translate-btn:focus {
+    border-color: #2196F3;
+    background: #ffffff;
+    color: #1565c0;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.07);
+}
+
+.ct-voice-translate-btn:active {
+    background: #f3f8fd;
+    color: #1976d2;
+    transform: scale(0.97);
+}
+
+.ct-voice-translate-btn .ct-voice-icon {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 1em;
+    margin-right: 4px;
+    filter: drop-shadow(0 0 1px #fff);
+    line-height: 1;
+    height: 16px;
+    width: 16px;
+}

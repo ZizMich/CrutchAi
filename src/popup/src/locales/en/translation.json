@@ -1,0 +1,23 @@
+{
+  "common": {
+    "home": "Home",
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "loading": "Loading..."
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "languages": {
+    "english": "English",
+    "spanish": "Spanish"
+  }
+} 

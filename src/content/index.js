@@ -1,1 +1,0 @@
-const contentController = new ContentController();

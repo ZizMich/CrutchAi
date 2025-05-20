@@ -7,6 +7,7 @@ class YouTubeHelper {
         this.asyncVoice = null;
         this.videoElement = null;
         this.transcriptManager = null;
+        this.videoQuiz = null;
     }
 
     init() {
@@ -18,6 +19,7 @@ class YouTubeHelper {
             this.chatUI = new ChatUI();
             this.transcriptManager = new TranscriptManager();
             this.videoElement = document.querySelector('video');
+            this.videoQuiz = new VideoQuiz(this.chatUI, this.aiService);
             this.setupVoiceTranslation();
         } catch (error) {
             console.error('YouTubeHelper initialization failed:', error);
@@ -117,12 +119,13 @@ class YouTubeHelper {
 
         const video = document.querySelector('video');
         const currentTime = Math.floor(video.currentTime);
+        const context = this.transcriptManager.extractContextAroundTimestamp(transcript, currentTime);
         
         switch(action) {
             case 'quiz':
                 const quizSize = Math.floor(Math.random() * 4) + 3; // Random number between 3 and 6
-                this.videoQuiz.startQuiz(transcript, currentTime, this.chatUI.chatLang, quizSize);
-                return;
+                await this.videoQuiz.startQuiz(context, currentTime, this.chatUI.chatLang, quizSize);
+                break;
             case 'explain':
                 const explainContext = this.transcriptManager.extractContextAroundTimestamp(transcript, currentTime);
                 this.sendPromptToAI(`Explain in ${this.chatUI.chatLang} what's happening at ${this.formatTime(currentTime)} in this video. Context: ${explainContext}`);
@@ -170,7 +173,10 @@ class YouTubeHelper {
         const loadingIndicator = this.chatUI.showTypingIndicator();
         
         try {
-            const response = await this.aiService.sendPrompt(prompt);
+            const response = await chrome.runtime.sendMessage({
+                type: 'analyze_video',
+                prompt: prompt
+            });
 
             if (response && response.result) {
                 this.chatUI.removeTypingIndicator(loadingIndicator);
@@ -182,10 +188,8 @@ class YouTubeHelper {
                         <div class="yt-assist-text">${formattedText}</div>
                     `;
                 }
-            } else if (response.error) {
-                throw new Error(response.error);
             } else {
-                throw new Error('Invalid response from AI');
+                throw new Error(response.error || 'Invalid response from AI');
             }
         } catch (error) {
             console.error('AI analysis failed:', error);

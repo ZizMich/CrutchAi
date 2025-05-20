@@ -51,12 +51,16 @@ if (typeof window.TranscriptManager === 'undefined') {
         }
 
         extractContextAroundTimestamp(transcript, currentTime) {
-            // Get only 2 minutes worth of context around current timestamp
-            const wordsPerMinute = 150;
-            const contextSize = wordsPerMinute * 2; // 2 minutes of context
-            const words = transcript.split(' ');
-            const start = Math.max(0, words.length - contextSize);
-            return words.slice(start, start + contextSize).join(' ');
+            if (!Array.isArray(transcript)) return '';
+            
+            // Find segments around current time
+            const relevantSegments = transcript.filter(segment => 
+                Math.abs(segment.start - currentTime) <= 120 // 2 minutes window
+            );
+
+            return relevantSegments
+                .map(segment => segment.text)
+                .join(' ');
         }
     }
     window.TranscriptManager = TranscriptManager;

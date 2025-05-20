@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ContextTranslate</title>
+  <link rel="stylesheet" href="../src/styles/style.css">
+  <link rel="stylesheet" href="../src/styles/popup.css">
+  <link rel="stylesheet" href="../src/styles/asyncVoice.css">
+</head>
+<body>
+  <div id="ct-popup">
+    <h2>ContextTranslate</h2>
+    <div id="ct-settings">
+      <label>
+        <input type="checkbox" id="ct-enabled">
+        Включить расширение
+      </label>
+      <label>
+        Глубина анализа:
+        <select id="ct-depth">
+          <option value="sentence">Предложение</option>
+          <option value="paragraph">Абзац</option>
+          <option value="page">Вся страница</option>
+        </select>
+      </label>
+      <label>
+        Язык перевода:
+        <select id="ct-target-lang">
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+          <option value="fr">Français</option>
+          <option value="es">Español</option>
+        </select>
+      </label>
+      <div id="ct-error" class="ct-error" style="display: none;"></div>
+    </div>
+    <hr>
+    <div id="ct-history">
+      <h3>История</h3>
+      <ul id="ct-history-list"></ul>
+    </div>
+  </div>
+  <script src="../src/popup/index.js" type="module"></script>
+  <script src="../src/content/index.js"></script>
+  <script src="../src/youtube/index.js"></script>
+</body>
+</html>

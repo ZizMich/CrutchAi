@@ -39,16 +39,31 @@ const callback = (mutationsList, observer) => {
 
 // Funktion, um den Observer zu starten, wenn das Ziel-Element vorhanden ist
 function startObserverIfElementExists() {
-  const targetNode = document.querySelector(".player-timedtext");
-
+  const subtitleContainer = document.querySelector(".player-timedtext");
+  const episodeInfo = document.querySelector(".ltr-m1ta4i")
+  var foundSubtitles = false
+  var foundInfo = false
   // Wenn das Ziel-Element gefunden wird, starte den Observer und stoppe das Intervall
-  if (targetNode) {
+  if (subtitleContainer && !foundSubtitles) {
     const observer = new MutationObserver(callback);
-    observer.observe(targetNode, config);
-    
-    // Intervall stoppen, da das Element jetzt beobachtet wird
-    clearInterval(observerInterval);
+    foundSubtitles= true
+    observer.observe(subtitleContainer, config);
   }
+if (episodeInfo && !foundInfo) {
+  var info = ''
+  foundInfo = true;
+
+  Array.from(episodeInfo.children).forEach(child => {
+    info += " " + child.textContent
+  });
+  console.log(info)
+  window.episodeInfo = info
+}
+  if(foundInfo && foundSubtitles){
+    clearInterval(observerInterval)
+  }
+
+  
 }
 
 // Setze ein Intervall, um regelmäßig nach dem Element zu suchen

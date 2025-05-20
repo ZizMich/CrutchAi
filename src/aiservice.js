@@ -1,11 +1,11 @@
 const w = "0.21.0";
-let U = !1, R, W, V, I, G, J, K, Q, z;
+let U = !1, R, W, V, D, G, J, K, Q, z;
 function Ee(r, e = { auto: !1 }) {
   if (U)
     throw new Error(`you must \`import 'groq-sdk/shims/${r.kind}'\` before importing anything else from groq-sdk`);
   if (R)
     throw new Error(`can't \`import 'groq-sdk/shims/${r.kind}'\` after \`import 'groq-sdk/shims/${R}'\``);
-  U = e.auto, R = r.kind, W = r.fetch, V = r.FormData, I = r.File, G = r.ReadableStream, J = r.getMultipartRequestOptions, K = r.getDefaultAgent, Q = r.fileFromPath, z = r.isFsReadStream;
+  U = e.auto, R = r.kind, W = r.fetch, V = r.FormData, D = r.File, G = r.ReadableStream, J = r.getMultipartRequestOptions, K = r.getDefaultAgent, Q = r.fileFromPath, z = r.isFsReadStream;
 }
 class Ae {
   constructor(e) {
@@ -89,7 +89,7 @@ class l extends p {
   }
   static generate(e, t, n, s) {
     if (!e || !s)
-      return new k({ message: n, cause: O(t) });
+      return new k({ message: n, cause: F(t) });
     const o = t;
     return e === 400 ? new ee(e, o, n, s) : e === 401 ? new te(e, o, n, s) : e === 403 ? new re(e, o, n, s) : e === 404 ? new ne(e, o, n, s) : e === 409 ? new se(e, o, n, s) : e === 422 ? new oe(e, o, n, s) : e === 429 ? new ie(e, o, n, s) : e >= 500 ? new ae(e, o, n, s) : new l(e, o, n, s);
   }
@@ -364,14 +364,14 @@ async function fe(r, e, t) {
     const s = await r.blob();
     e || (e = new URL(r.url).pathname.split(/[\\/]/).pop() ?? "unknown_file");
     const o = P(s) ? [await s.arrayBuffer()] : [s];
-    return new I(o, e, t);
+    return new D(o, e, t);
   }
   const n = await $e(r);
-  if (e || (e = Ie(r) ?? "unknown_file"), !t?.type) {
+  if (e || (e = De(r) ?? "unknown_file"), !t?.type) {
     const s = n[0]?.type;
     typeof s == "string" && (t = { ...t, type: s });
   }
-  return new I(n, e, t);
+  return new D(n, e, t);
 }
 async function $e(r) {
   let e = [];
@@ -390,7 +390,7 @@ async function $e(r) {
 function Ce(r) {
   return `[${Object.getOwnPropertyNames(r).map((t) => `"${t}"`).join(", ")}]`;
 }
-function Ie(r) {
+function De(r) {
   return $(r.name) || $(r.filename) || // For fs.ReadStream
   $(r.path)?.split(/[\\/]/).pop();
 }
@@ -399,13 +399,13 @@ const $ = (r) => {
     return r;
   if (typeof Buffer < "u" && r instanceof Buffer)
     return String(r);
-}, Be = (r) => r != null && typeof r == "object" && typeof r[Symbol.asyncIterator] == "function", j = (r) => r && typeof r == "object" && r.body && r[Symbol.toStringTag] === "MultipartBody", F = async (r) => {
-  const e = await De(r.body);
+}, Be = (r) => r != null && typeof r == "object" && typeof r[Symbol.asyncIterator] == "function", j = (r) => r && typeof r == "object" && r.body && r[Symbol.toStringTag] === "MultipartBody", L = async (r) => {
+  const e = await Ie(r.body);
   return J(e, r);
-}, De = async (r) => {
+}, Ie = async (r) => {
   const e = new V();
-  return await Promise.all(Object.entries(r || {}).map(([t, n]) => D(e, t, n))), e;
-}, D = async (r, e, t) => {
+  return await Promise.all(Object.entries(r || {}).map(([t, n]) => I(e, t, n))), e;
+}, I = async (r, e, t) => {
   if (t !== void 0) {
     if (t == null)
       throw new TypeError(`Received null for "${e}"; to pass null in FormData, you must use the string 'null'`);
@@ -415,9 +415,9 @@ const $ = (r) => {
       const n = await fe(t);
       r.append(e, n);
     } else if (Array.isArray(t))
-      await Promise.all(t.map((n) => D(r, e + "[]", n)));
+      await Promise.all(t.map((n) => I(r, e + "[]", n)));
     else if (typeof t == "object")
-      await Promise.all(Object.entries(t).map(([n, s]) => D(r, `${e}[${n}]`, s)));
+      await Promise.all(Object.entries(t).map(([n, s]) => I(r, `${e}[${n}]`, s)));
     else
       throw new TypeError(`Invalid value given to form, expected a string, number, boolean, object, Array, File or Blob but got ${t} instead`);
   }
@@ -494,7 +494,7 @@ class q extends Promise {
     return this.parse().finally(e);
   }
 }
-class Oe {
+class Fe {
   constructor({
     baseURL: e,
     maxRetries: t = 2,
@@ -617,7 +617,7 @@ class Oe {
     const { req: o, url: i, timeout: a } = this.buildRequest(n, { retryCount: s - t });
     if (await this.prepareRequest(o, { url: i, options: n }), b("request", i, n, o.headers), n.signal?.aborted)
       throw new B();
-    const u = new AbortController(), c = await this.fetchWithTimeout(i, o, a, u).catch(O);
+    const u = new AbortController(), c = await this.fetchWithTimeout(i, o, a, u).catch(F);
     if (c instanceof Error) {
       if (n.signal?.aborted)
         throw new B();
@@ -625,23 +625,23 @@ class Oe {
         return this.retryRequest(n, t);
       throw c.name === "AbortError" ? new Z() : new k({ cause: c });
     }
-    const d = Le(c.headers);
+    const d = Oe(c.headers);
     if (!c.ok) {
       if (t && this.shouldRetry(c)) {
         const _ = `retrying, ${t} attempts remaining`;
         return b(`response (error; ${_})`, c.status, i, d), this.retryRequest(n, t, d);
       }
-      const h = await c.text().catch((_) => O(_).message), x = Ne(h), E = x ? void 0 : h;
+      const h = await c.text().catch((_) => F(_).message), x = Ne(h), E = x ? void 0 : h;
       throw b(`response (error; ${t ? "(error; no more retries left)" : "(error; not retryable)"})`, c.status, i, d, E), this.makeStatusError(c.status, x, E, d);
     }
     return { response: c, options: n, controller: u };
   }
   requestAPIList(e, t) {
     const n = this.makeRequest(t, null);
-    return new Fe(this, n, e);
+    return new Le(this, n, e);
   }
   buildURL(e, t) {
-    const n = Me(e) ? new URL(e) : new URL(this.baseURL + (this.baseURL.endsWith("/") && e.startsWith("/") ? e.slice(1) : e)), s = this.defaultQuery();
+    const n = ve(e) ? new URL(e) : new URL(this.baseURL + (this.baseURL.endsWith("/") && e.startsWith("/") ? e.slice(1) : e)), s = this.defaultQuery();
     return Xe(s) || (t = { ...s, ...t }), typeof t == "object" && t && !Array.isArray(t) && (n.search = this.stringifyQuery(t)), n.toString();
   }
   stringifyQuery(e) {
@@ -685,7 +685,7 @@ class Oe {
       const a = e.maxRetries ?? this.maxRetries;
       s = this.calculateDefaultRetryTimeoutMillis(t, a);
     }
-    return await ve(s), this.makeRequest(e, t - 1);
+    return await He(s), this.makeRequest(e, t - 1);
   }
   calculateDefaultRetryTimeoutMillis(e, t) {
     const o = t - e, i = Math.min(0.5 * Math.pow(2, o), 8), a = 1 - Math.random() * 0.25;
@@ -695,7 +695,7 @@ class Oe {
     return `${this.constructor.name}/JS ${w}`;
   }
 }
-class Fe extends q {
+class Le extends q {
   constructor(e, t, n) {
     super(t, async (s) => new n(e, s.response, await le(s), s.options));
   }
@@ -712,7 +712,7 @@ class Fe extends q {
       yield t;
   }
 }
-const Le = (r) => new Proxy(Object.fromEntries(
+const Oe = (r) => new Proxy(Object.fromEntries(
   // @ts-ignore
   r.entries()
 ), {
@@ -725,7 +725,7 @@ const Le = (r) => new Proxy(Object.fromEntries(
     return {
       "X-Stainless-Lang": "js",
       "X-Stainless-Package-Version": w,
-      "X-Stainless-OS": H(Deno.build.os),
+      "X-Stainless-OS": M(Deno.build.os),
       "X-Stainless-Arch": N(Deno.build.arch),
       "X-Stainless-Runtime": "deno",
       "X-Stainless-Runtime-Version": typeof Deno.version == "string" ? Deno.version : Deno.version?.deno ?? "unknown"
@@ -743,7 +743,7 @@ const Le = (r) => new Proxy(Object.fromEntries(
     return {
       "X-Stainless-Lang": "js",
       "X-Stainless-Package-Version": w,
-      "X-Stainless-OS": H(process.platform),
+      "X-Stainless-OS": M(process.platform),
       "X-Stainless-Arch": N(process.arch),
       "X-Stainless-Runtime": "node",
       "X-Stainless-Runtime-Version": process.version
@@ -785,21 +785,21 @@ function Te() {
   }
   return null;
 }
-const N = (r) => r === "x32" ? "x32" : r === "x86_64" || r === "x64" ? "x64" : r === "arm" ? "arm" : r === "aarch64" || r === "arm64" ? "arm64" : r ? `other:${r}` : "unknown", H = (r) => (r = r.toLowerCase(), r.includes("ios") ? "iOS" : r === "android" ? "Android" : r === "darwin" ? "MacOS" : r === "win32" ? "Windows" : r === "freebsd" ? "FreeBSD" : r === "openbsd" ? "OpenBSD" : r === "linux" ? "Linux" : r ? `Other:${r}` : "Unknown");
-let M;
-const je = () => M ?? (M = Ue()), Ne = (r) => {
+const N = (r) => r === "x32" ? "x32" : r === "x86_64" || r === "x64" ? "x64" : r === "arm" ? "arm" : r === "aarch64" || r === "arm64" ? "arm64" : r ? `other:${r}` : "unknown", M = (r) => (r = r.toLowerCase(), r.includes("ios") ? "iOS" : r === "android" ? "Android" : r === "darwin" ? "MacOS" : r === "win32" ? "Windows" : r === "freebsd" ? "FreeBSD" : r === "openbsd" ? "OpenBSD" : r === "linux" ? "Linux" : r ? `Other:${r}` : "Unknown");
+let v;
+const je = () => v ?? (v = Ue()), Ne = (r) => {
   try {
     return JSON.parse(r);
   } catch {
     return;
   }
-}, He = /^[a-z][a-z0-9+.-]*:/i, Me = (r) => He.test(r), ve = (r) => new Promise((e) => setTimeout(e, r)), C = (r, e) => {
+}, Me = /^[a-z][a-z0-9+.-]*:/i, ve = (r) => Me.test(r), He = (r) => new Promise((e) => setTimeout(e, r)), C = (r, e) => {
   if (typeof e != "number" || !Number.isInteger(e))
     throw new p(`${r} must be an integer`);
   if (e < 0)
     throw new p(`${r} must be a positive integer`);
   return e;
-}, O = (r) => {
+}, F = (r) => {
   if (r instanceof Error)
     return r;
   if (typeof r == "object" && r !== null)
@@ -808,7 +808,7 @@ const je = () => M ?? (M = Ue()), Ne = (r) => {
     } catch {
     }
   return new Error(r);
-}, v = (r) => {
+}, H = (r) => {
   if (typeof process < "u")
     return process.env?.[r]?.trim() ?? void 0;
   if (typeof Deno < "u")
@@ -883,7 +883,7 @@ class he extends y {
    * Transcribes audio into the input language.
    */
   create(e, t) {
-    return this._client.post("/openai/v1/audio/transcriptions", F({ body: e, ...t }));
+    return this._client.post("/openai/v1/audio/transcriptions", L({ body: e, ...t }));
   }
 }
 class pe extends y {
@@ -891,7 +891,7 @@ class pe extends y {
    * Translates audio into English.
    */
   create(e, t) {
-    return this._client.post("/openai/v1/audio/translations", F({ body: e, ...t }));
+    return this._client.post("/openai/v1/audio/translations", L({ body: e, ...t }));
   }
 }
 class S extends y {
@@ -938,12 +938,12 @@ let me = class extends y {
     });
   }
 };
-class L extends y {
+class O extends y {
   constructor() {
     super(...arguments), this.completions = new me(this._client);
   }
 }
-L.Completions = me;
+O.Completions = me;
 class we extends y {
 }
 class ge extends y {
@@ -964,7 +964,7 @@ class be extends y {
    * Please contact us if you need to increase these storage limits.
    */
   create(e, t) {
-    return this._client.post("/openai/v1/files", F({ body: e, ...t }));
+    return this._client.post("/openai/v1/files", L({ body: e, ...t }));
   }
   /**
    * Returns a list of files.
@@ -1016,7 +1016,7 @@ class xe extends y {
   }
 }
 var Re;
-class f extends Oe {
+class f extends Fe {
   /**
    * API Client for interfacing with the Groq API.
    *
@@ -1030,7 +1030,7 @@ class f extends Oe {
    * @param {Core.DefaultQuery} opts.defaultQuery - Default query parameters to include with every request to the API.
    * @param {boolean} [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
    */
-  constructor({ baseURL: e = v("GROQ_BASE_URL"), apiKey: t = v("GROQ_API_KEY"), ...n } = {}) {
+  constructor({ baseURL: e = H("GROQ_BASE_URL"), apiKey: t = H("GROQ_API_KEY"), ...n } = {}) {
     if (t === void 0)
       throw new p("The GROQ_API_KEY environment variable is missing or empty; either provide it, or instantiate the Groq client with an apiKey option, like new Groq({ apiKey: 'My API Key' }).");
     const s = {
@@ -1052,7 +1052,7 @@ new Groq({ apiKey, dangerouslyAllowBrowser: true })`);
       httpAgent: s.httpAgent,
       maxRetries: s.maxRetries,
       fetch: s.fetch
-    }), this.completions = new we(this), this.chat = new L(this), this.embeddings = new ge(this), this.audio = new S(this), this.models = new xe(this), this.batches = new ye(this), this.files = new be(this), this._options = s, this.apiKey = t;
+    }), this.completions = new we(this), this.chat = new O(this), this.embeddings = new ge(this), this.audio = new S(this), this.models = new xe(this), this.batches = new ye(this), this.files = new be(this), this._options = s, this.apiKey = t;
   }
   defaultQuery() {
     return this._options.defaultQuery;
@@ -1086,26 +1086,26 @@ f.UnprocessableEntityError = oe;
 f.toFile = fe;
 f.fileFromPath = Q;
 f.Completions = we;
-f.Chat = L;
+f.Chat = O;
 f.Embeddings = ge;
 f.Audio = S;
 f.Models = xe;
 f.Batches = ye;
 f.Files = be;
-const Ke = new f({ apiKey: "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" });
-async function rt(r) {
+const Ke = new f({ apiKey: "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" });
+async function rt(r, e) {
   return (await Ke.chat.completions.create({
     messages: [
       {
         role: "system",
-        content: "You are a language learning helper that briefly answers the question on the language of the promt"
+        content: "You are a language learning helper that briefly answers the question on the language of the promt that ansers on this language" + e
       },
       {
         role: "user",
         content: r
       }
     ],
-    model: "llama-3.3-70b-versatile"
+    model: "meta-llama/llama-4-scout-17b-16e-instruct"
   })).choices[0]?.message?.content || "";
 }
 export {

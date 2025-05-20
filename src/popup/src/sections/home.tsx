@@ -4,6 +4,8 @@ import React from "react";
 import { usePreferences } from "../components/usePreferences";
 import Collapse from "../components/ui/collapse";
 import TextInput from "../components/ui/textinput";
+import Avatar from "../components/ui/avatar";
+import avatarPlaceholder from "../../../../images/avatar.jpg"
 export default function Home() {
   const [prefs, setPref] = usePreferences({
     translate_to: "German",
@@ -13,6 +15,7 @@ export default function Home() {
 
   return (
     <div className="background-light">
+      <Avatar image={avatarPlaceholder}></Avatar>
       <div style={containerTopStyle}>
         <span style={labelStyle}>Turn on/off</span>
         <Toggle style={toggleStyle}></Toggle>
@@ -26,7 +29,7 @@ export default function Home() {
       ></Selector>
       <Collapse title="Advanced setting">
         <div style={containerTopStyle}>
-          <span style={labelStyle1}>use custom prompt</span>
+          <span style={labelStyle1}>use custom prompt instead of standard</span>
           <Toggle
             style={toggleStyle}
             checked={prefs.useCustomPrompt}
@@ -36,7 +39,7 @@ export default function Home() {
           />
         </div>
 
-        <TextInput onDoneTyping={(value)=>{setPref("customPrompt",value); console.log(value)}} default={prefs.customPrompt} title={"Custom promt"}></TextInput>
+        <TextInput onDoneTyping={(value)=>{setPref("customPrompt",value); console.log(value)}} default={prefs.customPrompt} title={"change defalt prompt to custom"}></TextInput>
       </Collapse>
     </div>
   );
